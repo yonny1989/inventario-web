@@ -1,0 +1,237 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+/* BODY */
+
+body{
+    background:#dbeafe;
+    min-height:100vh;
+    display:flex;
+    color:#0f172a;
+}
+
+/* SIDEBAR */
+.sidebar{
+
+    width:240px;
+    background:#1e293b;
+    color:white;
+    padding:25px 20px;
+    position:fixed;
+    height:100%;
+    overflow-y:auto;
+    box-shadow:2px 0 10px rgba(0,0,0,0.2);
+
+}
+
+.sidebar h2{
+    text-align:center;
+    font-size:38px;
+    margin-bottom:40px;
+}
+
+.sidebar ul{
+    list-style:none;
+}
+
+.sidebar ul li{
+    margin:18px 0;
+}
+
+.sidebar ul li a{
+    color:white;
+    text-decoration:none;
+    font-size:24px;
+    display:block;
+    padding:14px;
+    border-radius:12px;
+    transition:0.3s;
+}
+
+.sidebar ul li a:hover{
+    background:#2563eb;
+    transform:translateX(5px);
+}
+
+/* MAIN */
+
+.main{
+    margin-left:240px;
+    width:100%;
+    padding:30px;
+}
+
+/* NAVBAR */
+
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.navbar h1{
+    font-size:65px;
+    color:#0f172a;
+}
+
+/* BOTON MODO OSCURO */
+
+.dark-btn{
+    background:#0f172a;
+    width:75px;
+    height:75px;
+    border-radius:18px;
+    font-size:30px;
+    border:2px solid white;
+}
+
+/* FORMULARIO */
+
+.formulario{
+    background:white;
+    padding:35px;
+    border-radius:25px;
+    margin-bottom:35px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+input{
+    width:100%;
+    padding:18px;
+    margin:12px 0;
+    border-radius:15px;
+    border:1px solid #cbd5e1;
+    background:#e2e8f0;
+    font-size:20px;
+    outline:none;
+}
+
+input:focus{
+    border:2px solid #2563eb;
+}
+
+/* BOTONES */
+
+button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:14px 24px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:18px;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#1d4ed8;
+    transform:scale(1.03);
+}
+
+/* TABLA */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+th{
+    background:#2563eb;
+    color:white;
+    padding:18px;
+    font-size:22px;
+}
+
+td{
+    padding:18px;
+    text-align:center;
+    border-bottom:1px solid #e5e7eb;
+    font-size:18px;
+}
+
+/* FILAS */
+
+tr:hover{
+    background:#f1f5f9;
+}
+
+/* BOTONES TABLA */
+
+td button{
+    margin:4px;
+}
+
+/* EDITAR */
+
+td button:first-child{
+    background:orange;
+}
+
+td button:first-child:hover{
+    background:#ea9a00;
+}
+
+/* ELIMINAR */
+
+td button:last-child{
+    background:red;
+}
+
+td button:last-child:hover{
+    background:#cc0000;
+}
+
+/* MODO OSCURO */
+
+.dark-mode{
+    background:#020617;
+    color:white;
+}
+
+.dark-mode .main{
+    background:#020617;
+}
+
+.dark-mode .navbar h1{
+    color:white;
+}
+
+.dark-mode .formulario{
+    background:#1e293b;
+}
+
+.dark-mode table{
+    background:#1e293b;
+    color:white;
+}
+
+.dark-mode th{
+    background:black;
+}
+
+.dark-mode td{
+    border-bottom:1px solid #334155;
+}
+
+.dark-mode tr:hover{
+    background:#334155;
+}
+
+.dark-mode input{
+    background:#334155;
+    color:white;
+    border:none;
+}
+
+.dark-mode input::placeholder{
+    color:#cbd5e1;
+}

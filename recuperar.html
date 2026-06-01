@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Recuperar Contraseña</title>
+
+<style>
+
+body{
+    margin:0;
+    padding:0;
+    font-family:Arial;
+    background:linear-gradient(135deg,#2563eb,#1e3a8a);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.recuperar{
+
+    background:white;
+    width:350px;
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0px 0px 20px rgba(0,0,0,0.2);
+    text-align:center;
+
+}
+
+h1{
+    margin-bottom:30px;
+}
+
+input{
+
+    width:100%;
+    padding:15px;
+    margin-top:15px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:16px;
+    box-sizing:border-box;
+
+}
+
+button{
+
+    width:100%;
+    padding:15px;
+    margin-top:20px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+
+}
+
+button:hover{
+    background:#1e40af;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="recuperar">
+
+    <h1>🔑 Recuperar Contraseña</h1>
+
+    <input type="email" id="correo" placeholder="Correo">
+
+    <input type="password" id="nuevaPassword" placeholder="Nueva contraseña">
+
+    <button onclick="recuperar()">
+        Cambiar contraseña
+    </button>
+
+</div>
+
+<script>
+
+async function recuperar(){
+
+    const correo = document.getElementById("correo").value;
+
+    const nuevaPassword = document.getElementById("nuevaPassword").value;
+
+    const respuesta = await fetch("https://unbolted-sandpit-satisfied.ngrok-free.dev/recuperar",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            correo,
+            nuevaPassword
+
+        })
+
+    });
+
+    const mensaje = await respuesta.text();
+
+    alert(mensaje);
+
+    if(mensaje === "Contraseña actualizada"){
+
+        window.location.href = "login.html";
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>

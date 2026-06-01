@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login</title>
+
+<style>
+
+body{
+
+    margin:0;
+    padding:0;
+    font-family:Arial;
+    background:linear-gradient(135deg,#2563eb,#1e3a8a);
+
+    height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+}
+
+.login{
+
+    background:white;
+
+    width:400px;
+
+    padding:40px;
+
+    border-radius:25px;
+
+    box-shadow:0px 0px 25px rgba(0,0,0,0.2);
+
+    text-align:center;
+
+}
+
+h1{
+
+    font-size:45px;
+
+    margin-bottom:30px;
+
+    color:#111827;
+
+}
+
+input{
+
+    width:100%;
+
+    padding:18px;
+
+    margin-top:15px;
+
+    border-radius:15px;
+
+    border:1px solid #cbd5e1;
+
+    background:#dbeafe;
+
+    font-size:18px;
+
+    box-sizing:border-box;
+
+}
+
+button{
+
+    width:100%;
+
+    padding:18px;
+
+    margin-top:20px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:20px;
+
+    cursor:pointer;
+
+}
+
+button:hover{
+
+    background:#1d4ed8;
+
+}
+
+.links{
+
+    margin-top:20px;
+
+}
+
+.links a{
+
+    display:block;
+
+    margin-top:10px;
+
+    text-decoration:none;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+}
+
+.crear{
+
+    color:#2563eb;
+
+}
+
+.recuperar{
+
+    color:red;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="login">
+
+    <h1>🔐 Iniciar Sesión</h1>
+
+    <input type="email" id="correo" placeholder="Correo" autocomplete="off">
+
+<input type="password" id="password" placeholder="Contraseña" autocomplete="off">
+
+    <button onclick="mostrarPassword()">
+        👁 Mostrar contraseña
+    </button>
+
+    <button onclick="login()">
+        Ingresar
+    </button>
+
+    <div class="links">
+
+        <a href="registro.html" class="crear">
+            Crear cuenta
+        </a>
+
+        <a href="recuperar.html" class="recuperar">
+            ¿Olvidaste tu contraseña?
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+
+function mostrarPassword(){
+
+    const input = document.getElementById("password");
+
+    if(input.type === "password"){
+
+        input.type = "text";
+
+    } else {
+
+        input.type = "password";
+
+    }
+
+}
+
+async function login(){
+
+    const correo = document.getElementById("correo").value;
+
+    const password = document.getElementById("password").value;
+
+    if(correo === "" || password === ""){
+
+        alert("Complete todos los campos");
+
+        return;
+
+    }
+
+    try{
+
+        const respuesta = await fetch("https://unbolted-sandpit-satisfied.ngrok-free.dev/login",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                correo:correo,
+                password:password
+
+            })
+
+        });
+
+        const mensaje = await respuesta.text();
+
+        if(mensaje.trim() === "Login correcto"){
+
+            alert("Bienvenido");
+
+            window.location.href = "./inventario.html";
+
+        }else{
+
+            alert(mensaje);
+
+        }
+
+    }catch(error){
+
+        console.log(error);
+
+        alert("Error al conectar con el servidor");
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>

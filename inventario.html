@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Inventario</title>
+
+<link rel="stylesheet" href="estilos.css">
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <h2>📦 Inventario</h2>
+
+    <ul>
+
+        <li><a href="#">🏠 Inicio</a></li>
+        <li><a href="#">📦 Productos</a></li>
+        <li><a href="#">👤 Usuarios</a></li>
+        <li><a href="#">👑 Administrador</a></li>
+        <li><a href="#">📊 Reportes</a></li>
+        <li><a href="#">⚙️ Configuración</a></li>
+        <li><a href="login.html">🚪 Cerrar Sesión</a></li>
+
+    </ul>
+
+</div>
+
+<!-- CONTENIDO -->
+
+<div class="main">
+
+    <!-- NAVBAR -->
+
+    <div class="navbar">
+
+        <h1>Sistema Inventario</h1>
+
+        <button class="dark-btn" onclick="modoOscuro()">
+            🌙
+        </button>
+
+    </div>
+
+    <!-- FORMULARIO -->
+
+    <div class="formulario">
+
+        <input
+        type="text"
+        id="nombre"
+        placeholder="Nombre producto">
+
+        <input
+        type="number"
+        id="precio"
+        placeholder="Precio">
+
+        <input
+        type="number"
+        id="cantidad"
+        placeholder="Cantidad">
+
+        <input
+        type="text"
+        id="categoria"
+        placeholder="Categoría">
+
+        <button onclick="guardarProducto()">
+            Guardar Producto
+        </button>
+
+    </div>
+
+    <!-- TABLA -->
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Categoría</th>
+                <th>Acciones</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="tablaProductos">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<script>
+
+let editandoId = null;
+
+/* CARGAR PRODUCTOS */
+
+async function cargarProductos(){
+
+    try{
+
+        const respuesta = await fetch("/productos");
+
+        const productos = await respuesta.json();
+
+        const tabla =
+        document.getElementById("tablaProductos");
+
+        tabla.innerHTML = "";
+
+        productos.forEach(producto=>{
+
+            tabla.innerHTML += `
+
+            <tr>
+
+                <td>${producto.id}</td>
+
+                <td>${producto.nombre}</td>
+
+                <td>$${producto.precio}</td>
+
+                <td>${producto.cantidad}</td>
+
+                <td>${producto.categoria}</td>
+
+                <td>
+
+                    <button onclick="editarProducto(
+                    ${producto.id},
+                    '${producto.nombre}',
+                    '${producto.precio}',
+                    '${producto.cantidad}',
+                    '${producto.categoria}'
+                    )">
+
+                    ✏️ Editar
+
+                    </button>
+
+                    <button onclick="eliminarProducto(${producto.id})">
+
+                    🗑 Eliminar
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+            `;
+
+        });
+
+    }catch(error){
+
+        console.log(error);
+
+    }
+
+}
+
+/* GUARDAR */
+
+async function guardarProducto(){
+
+    const nombre =
+    document.getElementById("nombre").value;
+
+    const precio =
+    document.getElementById("precio").value;
+
+    const cantidad =
+    document.getElementById("cantidad").value;
+
+    const categoria =
+    document.getElementById("categoria").value;
+
+    if(
+        nombre === "" ||
+        precio === "" ||
+        cantidad === "" ||
+        categoria === ""
+    ){
+
+        alert("Complete todos los campos");
+        return;
+
+    }
+
+    if(editandoId === null){
+
+        await fetch("/productos",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                nombre,
+                precio,
+                cantidad,
+                categoria
+
+            })
+
+        });
+
+    }else{
+
+        await fetch(`/productos/${editandoId}`,{
+
+            method:"PUT",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                nombre,
+                precio,
+                cantidad,
+                categoria
+
+            })
+
+        });
+
+        editandoId = null;
+
+    }
+
+    limpiarFormulario();
+
+    cargarProductos();
+
+}
+
+/* EDITAR */
+
+function editarProducto(
+id,
+nombre,
+precio,
+cantidad,
+categoria
+){
+
+    editandoId = id;
+
+    document.getElementById("nombre").value =
+    nombre;
+
+    document.getElementById("precio").value =
+    precio;
+
+    document.getElementById("cantidad").value =
+    cantidad;
+
+    document.getElementById("categoria").value =
+    categoria;
+
+}
+
+/* ELIMINAR */
+
+async function eliminarProducto(id){
+
+    if(!confirm("¿Eliminar producto?")){
+
+        return;
+
+    }
+
+    await fetch(`/productos/${id}`,{
+
+        method:"DELETE"
+
+    });
+
+    cargarProductos();
+
+}
+
+/* LIMPIAR */
+
+function limpiarFormulario(){
+
+    document.getElementById("nombre").value = "";
+
+    document.getElementById("precio").value = "";
+
+    document.getElementById("cantidad").value = "";
+
+    document.getElementById("categoria").value = "";
+
+}
+
+/* MODO OSCURO */
+
+function modoOscuro(){
+
+    document.body.classList.toggle("dark-mode");
+
+}
+
+/* INICIAR */
+
+window.onload = function(){
+
+    cargarProductos();
+
+};
+
+</script>
+
+</body>
+</html>

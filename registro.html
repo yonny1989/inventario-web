@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Registro</title>
+
+<link rel="stylesheet" href="estilos.css">
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#dbeafe;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.registro{
+    width:400px;
+    background:white;
+    padding:40px;
+    border-radius:25px;
+    box-shadow:0px 5px 20px rgba(0,0,0,0.2);
+}
+
+.registro h1{
+    text-align:center;
+    margin-bottom:30px;
+    color:#1e293b;
+    font-size:40px;
+}
+
+input{
+    width:100%;
+    padding:15px;
+    margin:12px 0;
+    border-radius:12px;
+    border:1px solid #cbd5e1;
+    background:#e2e8f0;
+    font-size:18px;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    background:#2563eb;
+    color:white;
+    font-size:20px;
+    cursor:pointer;
+    margin-top:15px;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+p{
+    text-align:center;
+    margin-top:20px;
+}
+
+a{
+    color:#2563eb;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="registro">
+
+    <h1>📝 Registro</h1>
+
+    <input type="text" id="nombre" placeholder="Nombre">
+
+    <input type="email" id="correo" placeholder="Correo">
+
+    <input type="password" id="password" placeholder="Contraseña">
+
+    <button onclick="registrar()">
+        Registrarse
+    </button>
+
+    <p>
+        ¿Ya tienes cuenta?
+        <a href="login.html">Iniciar sesión</a>
+    </p>
+
+</div>
+
+<script>
+
+async function registrar(){
+
+    const nombre =
+    document.getElementById("nombre").value;
+
+    const correo =
+    document.getElementById("correo").value;
+
+    const password =
+    document.getElementById("password").value;
+
+    const respuesta = await fetch("https://unbolted-sandpit-satisfied.ngrok-free.dev/registro",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            nombre,
+            correo,
+            password
+
+        })
+
+    });
+
+    const mensaje = await respuesta.text();
+
+    alert(mensaje);
+
+    if(mensaje === "Usuario registrado"){
+
+        window.location.href = "login.html";
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html> 
