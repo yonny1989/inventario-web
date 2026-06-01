@@ -212,10 +212,10 @@ app.delete("/productos/:id",(req,res)=>{
 
 /* SERVIDOR */
 
-app.listen(3000,"0.0.0.0",()=>{
+const PORT = process.env.PORT || 3000;
 
-    console.log("SERVIDOR CORRIENDO");
-
+app.listen(PORT,()=>{
+    console.log(`SERVIDOR CORRIENDO EN PUERTO ${PORT}`);
 });
 
 /* EDITAR PRODUCTO */
@@ -262,11 +262,3 @@ app.put("/productos/:id",(req,res)=>{
 });
 
 /* SERVIDOR */
-
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT,()=>{
-
-    console.log(`SERVIDOR CORRIENDO EN PUERTO ${PORT}`);
-
-});

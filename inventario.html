@@ -2,77 +2,156 @@
 <html lang="es">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Inventario</title>
 
-<link rel="stylesheet" href="estilos.css">
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#f1f5f9;
+}
+
+.sidebar{
+    width:220px;
+    height:100vh;
+    background:#1e3a8a;
+    color:white;
+    position:fixed;
+    padding:20px;
+}
+
+.sidebar ul{
+    list-style:none;
+    padding:0;
+}
+
+.sidebar li{
+    margin:15px 0;
+}
+
+.sidebar a{
+    color:white;
+    text-decoration:none;
+}
+
+.main{
+    margin-left:260px;
+    padding:20px;
+}
+
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.dark-btn{
+    padding:10px;
+    border:none;
+    cursor:pointer;
+}
+
+.formulario{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+.formulario input{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    box-sizing:border-box;
+}
+
+.formulario button{
+    width:100%;
+    padding:12px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+table th,
+table td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+
+.editar{
+    background:#f59e0b;
+    color:white;
+    border:none;
+    padding:8px 12px;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.eliminar{
+    background:#dc2626;
+    color:white;
+    border:none;
+    padding:8px 12px;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.dark-mode{
+    background:#111827;
+    color:white;
+}
+
+</style>
 
 </head>
 
 <body>
-
-<!-- SIDEBAR -->
 
 <div class="sidebar">
 
     <h2>📦 Inventario</h2>
 
     <ul>
-
         <li><a href="#">🏠 Inicio</a></li>
         <li><a href="#">📦 Productos</a></li>
         <li><a href="#">👤 Usuarios</a></li>
-        <li><a href="#">👑 Administrador</a></li>
         <li><a href="#">📊 Reportes</a></li>
-        <li><a href="#">⚙️ Configuración</a></li>
         <li><a href="login.html">🚪 Cerrar Sesión</a></li>
-
     </ul>
 
 </div>
 
-<!-- CONTENIDO -->
-
 <div class="main">
 
-    <!-- NAVBAR -->
-
     <div class="navbar">
-
         <h1>Sistema Inventario</h1>
 
         <button class="dark-btn" onclick="modoOscuro()">
             🌙
         </button>
-
     </div>
-
-    <!-- FORMULARIO -->
 
     <div class="formulario">
 
-        <input
-        type="text"
-        id="nombre"
-        placeholder="Nombre producto">
+        <input type="text" id="nombre" placeholder="Nombre Producto">
 
-        <input
-        type="number"
-        id="precio"
-        placeholder="Precio">
+        <input type="number" id="precio" placeholder="Precio">
 
-        <input
-        type="number"
-        id="cantidad"
-        placeholder="Cantidad">
+        <input type="number" id="cantidad" placeholder="Cantidad">
 
-        <input
-        type="text"
-        id="categoria"
-        placeholder="Categoría">
+        <input type="text" id="categoria" placeholder="Categoría">
 
         <button onclick="guardarProducto()">
             Guardar Producto
@@ -80,28 +159,22 @@
 
     </div>
 
-    <!-- TABLA -->
-
     <table>
 
         <thead>
 
             <tr>
-
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Precio</th>
                 <th>Cantidad</th>
                 <th>Categoría</th>
                 <th>Acciones</th>
-
             </tr>
 
         </thead>
 
-        <tbody id="tablaProductos">
-
-        </tbody>
+        <tbody id="tablaProductos"></tbody>
 
     </table>
 
@@ -117,9 +190,11 @@ async function cargarProductos(){
 
     try{
 
-        const respuesta = await fetch("/productos");
+        const respuesta =
+        await fetch("http://localhost:3000/productos");
 
-        const productos = await respuesta.json();
+        const productos =
+        await respuesta.json();
 
         const tabla =
         document.getElementById("tablaProductos");
@@ -136,7 +211,7 @@ async function cargarProductos(){
 
                 <td>${producto.nombre}</td>
 
-                <td>$${producto.precio}</td>
+                <td>${producto.precio}</td>
 
                 <td>${producto.cantidad}</td>
 
@@ -144,7 +219,9 @@ async function cargarProductos(){
 
                 <td>
 
-                    <button onclick="editarProducto(
+                    <button
+                    class="editar"
+                    onclick="editarProducto(
                     ${producto.id},
                     '${producto.nombre}',
                     '${producto.precio}',
@@ -156,7 +233,9 @@ async function cargarProductos(){
 
                     </button>
 
-                    <button onclick="eliminarProducto(${producto.id})">
+                    <button
+                    class="eliminar"
+                    onclick="eliminarProducto(${producto.id})">
 
                     🗑 Eliminar
 
@@ -195,20 +274,19 @@ async function guardarProducto(){
     document.getElementById("categoria").value;
 
     if(
-        nombre === "" ||
-        precio === "" ||
-        cantidad === "" ||
-        categoria === ""
-    ){
+        nombre==="" ||
+        precio==="" ||
+        cantidad==="" ||
+        categoria===""){
 
         alert("Complete todos los campos");
         return;
-
     }
 
-    if(editandoId === null){
+    if(editandoId===null){
 
-        await fetch("/productos",{
+        await fetch(
+        "http://localhost:3000/productos",{
 
             method:"POST",
 
@@ -217,19 +295,18 @@ async function guardarProducto(){
             },
 
             body:JSON.stringify({
-
                 nombre,
                 precio,
                 cantidad,
                 categoria
-
             })
 
         });
 
     }else{
 
-        await fetch(`/productos/${editandoId}`,{
+        await fetch(
+        `http://localhost:3000/productos/${editandoId}`,{
 
             method:"PUT",
 
@@ -238,12 +315,10 @@ async function guardarProducto(){
             },
 
             body:JSON.stringify({
-
                 nombre,
                 precio,
                 cantidad,
                 categoria
-
             })
 
         });
@@ -270,17 +345,10 @@ categoria
 
     editandoId = id;
 
-    document.getElementById("nombre").value =
-    nombre;
-
-    document.getElementById("precio").value =
-    precio;
-
-    document.getElementById("cantidad").value =
-    cantidad;
-
-    document.getElementById("categoria").value =
-    categoria;
+    document.getElementById("nombre").value = nombre;
+    document.getElementById("precio").value = precio;
+    document.getElementById("cantidad").value = cantidad;
+    document.getElementById("categoria").value = categoria;
 
 }
 
@@ -288,13 +356,17 @@ categoria
 
 async function eliminarProducto(id){
 
-    if(!confirm("¿Eliminar producto?")){
+    const confirmar =
+    confirm("¿Desea eliminar este producto?");
+
+    if(!confirmar){
 
         return;
 
     }
 
-    await fetch(`/productos/${id}`,{
+    await fetch(
+    `http://localhost:3000/productos/${id}`,{
 
         method:"DELETE"
 
@@ -308,13 +380,10 @@ async function eliminarProducto(id){
 
 function limpiarFormulario(){
 
-    document.getElementById("nombre").value = "";
-
-    document.getElementById("precio").value = "";
-
-    document.getElementById("cantidad").value = "";
-
-    document.getElementById("categoria").value = "";
+    document.getElementById("nombre").value="";
+    document.getElementById("precio").value="";
+    document.getElementById("cantidad").value="";
+    document.getElementById("categoria").value="";
 
 }
 
@@ -328,11 +397,7 @@ function modoOscuro(){
 
 /* INICIAR */
 
-window.onload = function(){
-
-    cargarProductos();
-
-};
+window.onload = cargarProductos;
 
 </script>
 
