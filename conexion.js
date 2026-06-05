@@ -1,27 +1,11 @@
 import mysql from "mysql2";
 
-export const conexion = mysql.createConnection({
-
-    host: "localhost",
-
-    user: "root",
-
-    password: "YONNY8820",
-
-    database: "inventario"
-
-});
+export const conexion = mysql.createConnection(process.env.MYSQL_URL);
 
 conexion.connect((error) => {
-
-    if(error){
-
-        console.log(error);
-
+    if (error) {
+        console.log("Error MySQL:", error);
     } else {
-
         console.log("MySQL conectado");
-
     }
-
 });
