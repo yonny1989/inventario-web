@@ -3,7 +3,9 @@ import cors from "cors";
 import mysql from "mysql2";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+
 dotenv.config();
+
 const app = express();
 
 /* CONFIGURACION */
@@ -12,25 +14,19 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("./"));
 
-/* CONEXION MYSQL */
+/* CONEXION MYSQL RAILWAY */
 
-const conexion = mysql.createConnection({
-    host: process.env.MYSQLHOST,
-    user: process.env.MYSQLUSER,
-    password: process.env.MYSQLPASSWORD,
-    database: process.env.MYSQLDATABASE,
-    port: process.env.MYSQLPORT
-});
+const conexion = mysql.createConnection(process.env.MYSQL_URL);
 
 /* CONECTAR MYSQL */
 
-conexion.connect((error)=>{
+conexion.connect((error) => {
 
-    if(error){
+    if (error) {
 
-        console.log(error);
+        console.log("Error MySQL:", error);
 
-    }else{
+    } else {
 
         console.log("MYSQL CONECTADO");
 
@@ -40,7 +36,7 @@ conexion.connect((error)=>{
 
 /* RUTA PRINCIPAL */
 
-app.get("/", (req,res)=>{
+app.get("/", (req, res) => {
 
     res.sendFile(process.cwd() + "/login.html");
 
@@ -48,74 +44,78 @@ app.get("/", (req,res)=>{
 
 /* REGISTRO */
 
-app.post("/registro", async(req,res)=>{
+app.post("/registro", async (req, res) => {
 
     const { nombre, correo, password } = req.body;
 
-    const passwordHash = await bcrypt.hash(password,10);
+    const passwordHash = await bcrypt.hash(password, 10);
 
     const sql = `
         INSERT INTO usuarios(nombre,correo,password,rol)
         VALUES(?,?,?,'usuario')
     `;
 
-    conexion.query(sql,
-    [nombre,correo,passwordHash],
-    (error)=>{
+    conexion.query(
+        sql,
+        [nombre, correo, passwordHash],
+        (error) => {
 
-        if(error){
+            if (error) {
 
-            console.log(error);
-            res.send("Error al registrar");
+                console.log(error);
+                res.send("Error al registrar");
 
-        }else{
+            } else {
 
-            res.send("Usuario registrado");
+                res.send("Usuario registrado");
+
+            }
 
         }
-
-    });
+    );
 
 });
 
 /* LOGIN */
 
-app.post("/login",(req,res)=>{
+app.post("/login", (req, res) => {
 
-    const { correo,password } = req.body;
+    const { correo, password } = req.body;
 
     const sql = `
         SELECT * FROM usuarios
         WHERE correo = ?
     `;
 
-    conexion.query(sql,[correo], async(error,resultados)=>{
+    conexion.query(sql, [correo], async (error, resultados) => {
 
-        if(error){
+        if (error) {
 
             console.log(error);
             res.send("Error servidor");
 
-        }else{
+        } else {
 
-            if(resultados.length > 0){
+            if (resultados.length > 0) {
 
                 const usuario = resultados[0];
 
-                const valido =
-                await bcrypt.compare(password,usuario.password);
+                const valido = await bcrypt.compare(
+                    password,
+                    usuario.password
+                );
 
-                if(valido){
+                if (valido) {
 
                     res.send("Login correcto");
 
-                }else{
+                } else {
 
                     res.send("Contraseña incorrecta");
 
                 }
 
-            }else{
+            } else {
 
                 res.send("Usuario no encontrado");
 
@@ -129,50 +129,52 @@ app.post("/login",(req,res)=>{
 
 /* GUARDAR PRODUCTOS */
 
-app.post("/productos",(req,res)=>{
+app.post("/productos", (req, res) => {
 
-    const { nombre,precio,cantidad,categoria } = req.body;
+    const { nombre, precio, cantidad, categoria } = req.body;
 
     const sql = `
         INSERT INTO productos(nombre,precio,cantidad,categoria)
         VALUES(?,?,?,?)
     `;
 
-    conexion.query(sql,
-    [nombre,precio,cantidad,categoria],
-    (error)=>{
+    conexion.query(
+        sql,
+        [nombre, precio, cantidad, categoria],
+        (error) => {
 
-        if(error){
+            if (error) {
 
-            console.log(error);
-            res.send("Error guardar producto");
+                console.log(error);
+                res.send("Error guardar producto");
 
-        }else{
+            } else {
 
-            res.send("Producto guardado");
+                res.send("Producto guardado");
+
+            }
 
         }
-
-    });
+    );
 
 });
 
 /* MOSTRAR PRODUCTOS */
 
-app.get("/productos",(req,res)=>{
+app.get("/productos", (req, res) => {
 
     const sql = `
         SELECT * FROM productos
     `;
 
-    conexion.query(sql,(error,resultados)=>{
+    conexion.query(sql, (error, resultados) => {
 
-        if(error){
+        if (error) {
 
             console.log(error);
             res.send([]);
 
-        }else{
+        } else {
 
             res.json(resultados);
 
@@ -182,9 +184,9 @@ app.get("/productos",(req,res)=>{
 
 });
 
-/* ELIMINAR PRODUCTOS */
+/* ELIMINAR PRODUCTO */
 
-app.delete("/productos/:id",(req,res)=>{
+app.delete("/productos/:id", (req, res) => {
 
     const id = req.params.id;
 
@@ -193,14 +195,14 @@ app.delete("/productos/:id",(req,res)=>{
         WHERE id = ?
     `;
 
-    conexion.query(sql,[id],(error)=>{
+    conexion.query(sql, [id], (error) => {
 
-        if(error){
+        if (error) {
 
             console.log(error);
             res.send("Error eliminar");
 
-        }else{
+        } else {
 
             res.send("Producto eliminado");
 
@@ -210,17 +212,9 @@ app.delete("/productos/:id",(req,res)=>{
 
 });
 
-/* SERVIDOR */
-
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT,()=>{
-    console.log(`SERVIDOR CORRIENDO EN PUERTO ${PORT}`);
-});
-
 /* EDITAR PRODUCTO */
 
-app.put("/productos/:id",(req,res)=>{
+app.put("/productos/:id", (req, res) => {
 
     const id = req.params.id;
 
@@ -242,15 +236,15 @@ app.put("/productos/:id",(req,res)=>{
 
     conexion.query(
         sql,
-        [nombre,precio,cantidad,categoria,id],
-        (error)=>{
+        [nombre, precio, cantidad, categoria, id],
+        (error) => {
 
-            if(error){
+            if (error) {
 
                 console.log(error);
                 res.send("Error editar");
 
-            }else{
+            } else {
 
                 res.send("Producto actualizado");
 
@@ -262,3 +256,11 @@ app.put("/productos/:id",(req,res)=>{
 });
 
 /* SERVIDOR */
+
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+
+    console.log(`SERVIDOR CORRIENDO EN PUERTO ${PORT}`);
+
+});
