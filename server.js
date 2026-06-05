@@ -16,6 +16,8 @@ app.use(express.static("./"));
 
 /* CONEXION MYSQL RAILWAY */
 
+console.log("MYSQL_URL =", process.env.MYSQL_URL);
+
 const conexion = mysql.createConnection(process.env.MYSQL_URL);
 
 /* CONECTAR MYSQL */
