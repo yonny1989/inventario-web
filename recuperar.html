@@ -94,7 +94,7 @@ async function recuperar(){
 
     const nuevaPassword = document.getElementById("nuevaPassword").value;
 
-    const respuesta = await fetch("http://localhost:3000/recuperar",{
+    const respuesta = await fetch("/recuperar",{
 
         method:"POST",
 

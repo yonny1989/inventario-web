@@ -201,22 +201,20 @@ async function login(){
 
     try{
 
-        const respuesta = await fetch("http://localhost:3000/login",{
+        const respuesta = await fetch("/login", {
 
-            method:"POST",
+    method:"POST",
 
-            headers:{
-                "Content-Type":"application/json"
-            },
+    headers:{
+        "Content-Type":"application/json"
+    },
 
-            body:JSON.stringify({
+    body:JSON.stringify({
+        correo:correo,
+        password:password
+    })
 
-                correo:correo,
-                password:password
-
-            })
-
-        });
+});
 
         const mensaje = await respuesta.text();
 
