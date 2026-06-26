@@ -32,6 +32,26 @@ conexion.connect((error) => {
 
         console.log("MYSQL CONECTADO");
 
+        conexion.query(`
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nombre VARCHAR(100),
+            correo VARCHAR(100) UNIQUE,
+            password VARCHAR(255),
+            rol VARCHAR(20)
+        )
+        `);
+
+        conexion.query(`
+        CREATE TABLE IF NOT EXISTS productos (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nombre VARCHAR(100),
+            precio DECIMAL(10,2),
+            cantidad INT,
+            categoria VARCHAR(100)
+        )
+        `);
+
     }
 
 });
