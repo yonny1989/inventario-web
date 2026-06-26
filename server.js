@@ -18,6 +18,11 @@ app.use(express.static("./"));
 
 console.log("MYSQL_URL =", process.env.MYSQL_URL);
 
+console.log("HOST:", process.env.MYSQLHOST);
+console.log("USER:", process.env.MYSQLUSER);
+console.log("DB:", process.env.MYSQLDATABASE);
+console.log("PORT:", process.env.MYSQLPORT);
+
 const conexion = mysql.createConnection({
     host: process.env.MYSQLHOST,
     user: process.env.MYSQLUSER,
@@ -25,7 +30,6 @@ const conexion = mysql.createConnection({
     database: process.env.MYSQLDATABASE,
     port: process.env.MYSQLPORT
 });
-
 /* CONECTAR MYSQL */
 
 conexion.connect((error) => {
