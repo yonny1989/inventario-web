@@ -6,114 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Inventario</title>
 
-<style>
-
-body{
-    margin:0;
-    font-family:Arial;
-    background:#f1f5f9;
-}
-
-.sidebar{
-    width:220px;
-    height:100vh;
-    background:#1e3a8a;
-    color:white;
-    position:fixed;
-    padding:20px;
-}
-
-.sidebar ul{
-    list-style:none;
-    padding:0;
-}
-
-.sidebar li{
-    margin:15px 0;
-}
-
-.sidebar a{
-    color:white;
-    text-decoration:none;
-}
-
-.main{
-    margin-left:260px;
-    padding:20px;
-}
-
-.navbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.dark-btn{
-    padding:10px;
-    border:none;
-    cursor:pointer;
-}
-
-.formulario{
-    background:white;
-    padding:20px;
-    border-radius:10px;
-    margin-bottom:20px;
-}
-
-.formulario input{
-    width:100%;
-    padding:10px;
-    margin:10px 0;
-    box-sizing:border-box;
-}
-
-.formulario button{
-    width:100%;
-    padding:12px;
-    background:#2563eb;
-    color:white;
-    border:none;
-    cursor:pointer;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    background:white;
-}
-
-table th,
-table td{
-    border:1px solid #ddd;
-    padding:10px;
-    text-align:center;
-}
-
-.editar{
-    background:#f59e0b;
-    color:white;
-    border:none;
-    padding:8px 12px;
-    cursor:pointer;
-    border-radius:5px;
-}
-
-.eliminar{
-    background:#dc2626;
-    color:white;
-    border:none;
-    padding:8px 12px;
-    cursor:pointer;
-    border-radius:5px;
-}
-
-.dark-mode{
-    background:#111827;
-    color:white;
-}
-
-</style>
+<link rel="stylesheet" href="estilos.css">
 
 </head>
 
@@ -184,80 +77,62 @@ table td{
 
 let editandoId = null;
 
-/* CARGAR PRODUCTOS */
-
 async function cargarProductos(){
 
-    try{
+    const respuesta = await fetch("/productos");
 
-        const respuesta =
-        await fetch("http://localhost:3000/productos");
+    const productos = await respuesta.json();
 
-        const productos =
-        await respuesta.json();
+    const tabla =
+    document.getElementById("tablaProductos");
 
-        const tabla =
-        document.getElementById("tablaProductos");
+    tabla.innerHTML = "";
 
-        tabla.innerHTML = "";
+    productos.forEach(producto=>{
 
-        productos.forEach(producto=>{
+        tabla.innerHTML += `
 
-            tabla.innerHTML += `
+        <tr>
 
-            <tr>
+            <td>${producto.id}</td>
 
-                <td>${producto.id}</td>
+            <td>${producto.nombre}</td>
 
-                <td>${producto.nombre}</td>
+            <td>${producto.precio}</td>
 
-                <td>${producto.precio}</td>
+            <td>${producto.cantidad}</td>
 
-                <td>${producto.cantidad}</td>
+            <td>${producto.categoria}</td>
 
-                <td>${producto.categoria}</td>
+            <td>
 
-                <td>
+                <button onclick="editarProducto(
+                ${producto.id},
+                '${producto.nombre}',
+                '${producto.precio}',
+                '${producto.cantidad}',
+                '${producto.categoria}'
+                )">
 
-                    <button
-                    class="editar"
-                    onclick="editarProducto(
-                    ${producto.id},
-                    '${producto.nombre}',
-                    '${producto.precio}',
-                    '${producto.cantidad}',
-                    '${producto.categoria}'
-                    )">
+                ✏️ Editar
 
-                    ✏️ Editar
+                </button>
 
-                    </button>
+                <button onclick="eliminarProducto(${producto.id})">
 
-                    <button
-                    class="eliminar"
-                    onclick="eliminarProducto(${producto.id})">
+                🗑 Eliminar
 
-                    🗑 Eliminar
+                </button>
 
-                    </button>
+            </td>
 
-                </td>
+        </tr>
 
-            </tr>
+        `;
 
-            `;
-
-        });
-
-    }catch(error){
-
-        console.log(error);
-
-    }
+    });
 
 }
-
-/* GUARDAR */
 
 async function guardarProducto(){
 
@@ -273,20 +148,9 @@ async function guardarProducto(){
     const categoria =
     document.getElementById("categoria").value;
 
-    if(
-        nombre==="" ||
-        precio==="" ||
-        cantidad==="" ||
-        categoria===""){
+    if(editandoId === null){
 
-        alert("Complete todos los campos");
-        return;
-    }
-
-    if(editandoId===null){
-
-        await fetch(
-        "http://localhost:3000/productos",{
+        await fetch("/productos",{
 
             method:"POST",
 
@@ -305,8 +169,7 @@ async function guardarProducto(){
 
     }else{
 
-        await fetch(
-        `http://localhost:3000/productos/${editandoId}`,{
+        await fetch(`/productos/${editandoId}`,{
 
             method:"PUT",
 
@@ -333,8 +196,6 @@ async function guardarProducto(){
 
 }
 
-/* EDITAR */
-
 function editarProducto(
 id,
 nombre,
@@ -352,31 +213,19 @@ categoria
 
 }
 
-/* ELIMINAR */
-
 async function eliminarProducto(id){
 
-    const confirmar =
-    confirm("¿Desea eliminar este producto?");
+    if(confirm("¿Eliminar producto?")){
 
-    if(!confirmar){
+        await fetch(`/productos/${id}`,{
+            method:"DELETE"
+        });
 
-        return;
+        cargarProductos();
 
     }
 
-    await fetch(
-    `http://localhost:3000/productos/${id}`,{
-
-        method:"DELETE"
-
-    });
-
-    cargarProductos();
-
 }
-
-/* LIMPIAR */
 
 function limpiarFormulario(){
 
@@ -387,15 +236,11 @@ function limpiarFormulario(){
 
 }
 
-/* MODO OSCURO */
-
 function modoOscuro(){
 
     document.body.classList.toggle("dark-mode");
 
 }
-
-/* INICIAR */
 
 window.onload = cargarProductos;
 
