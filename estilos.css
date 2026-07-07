@@ -15,117 +15,62 @@ body{
 }
 
 /* SIDEBAR */
-.sidebar{
-
-    width:240px;
-    background:#1e293b;
-    color:white;
-    padding:25px 20px;
-    position:fixed;
-    height:100%;
-    overflow-y:auto;
-    box-shadow:2px 0 10px rgba(0,0,0,0.2);
-
-}
 
 .sidebar h2{
-    text-align:center;
-    font-size:38px;
-    margin-bottom:40px;
-}
-
-.sidebar ul{
-    list-style:none;
-}
-
-.sidebar ul li{
-    margin:18px 0;
+    font-size:18px;
+    margin-bottom:25px;
 }
 
 .sidebar ul li a{
-    color:white;
-    text-decoration:none;
-    font-size:24px;
-    display:block;
-    padding:14px;
-    border-radius:12px;
-    transition:0.3s;
+    font-size:15px;
+    padding:10px;
 }
 
-.sidebar ul li a:hover{
-    background:#2563eb;
-    transform:translateX(5px);
-}
-
-/* MAIN */
-
-.main{
-    margin-left:240px;
-    width:100%;
-    padding:30px;
-}
-
-/* NAVBAR */
-
-.navbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:30px;
-}
+/* TITULO */
 
 .navbar h1{
-    font-size:65px;
-    color:#0f172a;
+    font-size:30px;
 }
 
-/* BOTON MODO OSCURO */
+/* BOTON LUNA */
 
 .dark-btn{
-    background:#0f172a;
-    width:75px;
-    height:75px;
-    border-radius:18px;
-    font-size:30px;
-    border:2px solid white;
+    width:45px;
+    height:45px;
+    font-size:18px;
 }
 
-/* FORMULARIO */
-
-.formulario{
-    background:white;
-    padding:35px;
-    border-radius:25px;
-    margin-bottom:35px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.1);
-}
+/* INPUTS */
 
 input{
-    width:100%;
-    padding:18px;
-    margin:12px 0;
-    border-radius:15px;
-    border:1px solid #cbd5e1;
-    background:#e2e8f0;
-    font-size:20px;
-    outline:none;
+    padding:12px;
+    font-size:14px;
 }
 
-input:focus{
-    border:2px solid #2563eb;
-}
-
-/* BOTONES */
+/* BOTON GUARDAR */
 
 button{
-    background:#2563eb;
-    color:white;
-    border:none;
-    padding:14px 24px;
-    border-radius:12px;
-    cursor:pointer;
-    font-size:18px;
-    transition:0.3s;
+    padding:10px 18px;
+    font-size:14px;
+}
+
+/* TABLA */
+
+th{
+    padding:12px;
+    font-size:15px;
+}
+
+td{
+    padding:12px;
+    font-size:14px;
+}
+
+/* BOTONES EDITAR Y ELIMINAR */
+
+td button{
+    padding:6px 10px;
+    font-size:12px;
 }
 
 button:hover{
@@ -143,19 +88,21 @@ table{
     overflow:hidden;
     box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
-
+tbody tr{
+    transition:.3s;
+}
 th{
     background:#2563eb;
     color:white;
-    padding:18px;
-    font-size:22px;
+    padding:15px;
+    font-size:18px;
 }
 
 td{
-    padding:18px;
+    padding:15px;
     text-align:center;
     border-bottom:1px solid #e5e7eb;
-    font-size:18px;
+    font-size:16px;
 }
 
 /* FILAS */
@@ -163,31 +110,17 @@ td{
 tr:hover{
     background:#f1f5f9;
 }
+tbody tr:nth-child(even){
+    background:#f8fafc;
+}
 
 /* BOTONES TABLA */
 
 td button{
     margin:4px;
-}
-
-/* EDITAR */
-
-td button:first-child{
-    background:orange;
-}
-
-td button:first-child:hover{
-    background:#ea9a00;
-}
-
-/* ELIMINAR */
-
-td button:last-child{
-    background:red;
-}
-
-td button:last-child:hover{
-    background:#cc0000;
+    padding:8px 14px;
+    font-size:14px;
+    border-radius:8px;
 }
 
 /* MODO OSCURO */
@@ -234,4 +167,18 @@ td button:last-child:hover{
 
 .dark-mode input::placeholder{
     color:#cbd5e1;
+}
+
+body,
+.main,
+.formulario,
+table,
+input{
+    transition:0.3s;
+}
+.dark-btn:hover{
+    transform:rotate(20deg);
+}
+input:hover{
+    background:#dbeafe;
 }

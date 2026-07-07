@@ -94,8 +94,8 @@ app.post("/registro", async (req, res) => {
 
             if (error) {
 
-                console.log(error);
-                res.send("Error al registrar");
+                console.log("ERROR REGISTRO:", error);
+                res.send(error.message);
 
             } else {
 
