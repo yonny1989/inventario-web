@@ -91,17 +91,15 @@ app.post("/registro", async (req, res) => {
         sql,
         [nombre, correo, passwordHash],
         (error) => {
+                if (error) {
+    console.log("ERROR REGISTRO:", error);
 
-            if (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+        return res.send("Ese correo ya está registrado");
+    }
 
-                console.log("ERROR REGISTRO:", error);
-                res.send(error.message);
-
-            } else {
-
-                res.send("Usuario registrado");
-
-            }
+    return res.send("Error al registrar");
+}
 
         }
     );
