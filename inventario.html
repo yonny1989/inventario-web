@@ -2,78 +2,192 @@
 <html lang="es">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inventario</title>
 
-<link rel="stylesheet" href="./estilos.css">
+<title>YonnySoft ERP</title>
+
+<link rel="stylesheet" href="estilos.css">
 
 </head>
 
 <body>
 
+<!-- ===== SIDEBAR ===== -->
+
 <div class="sidebar">
 
-    <h2>📦 Inventario</h2>
+    <div class="logo">
+
+        <h2>🟦 YonnySoft</h2>
+
+        <p>ERP Profesional</p>
+
+    </div>
 
     <ul>
+
         <li><a href="#">🏠 Inicio</a></li>
-        <li><a href="#">📦 Productos</a></li>
-        <li><a href="#">👤 Usuarios</a></li>
-        <li><a href="#">📊 Reportes</a></li>
+
+        <li><a href="#">📦 Inventario</a></li>
+
+        <li><a href="#">💰 Ventas</a></li>
+
+        <li><a href="#">👥 Clientes</a></li>
+
+        <li><a href="#">🚚 Proveedores</a></li>
+
+        <li><a href="#">📈 Reportes</a></li>
+
+        <li><a href="#">⚙ Configuración</a></li>
+
         <li><a href="login.html">🚪 Cerrar Sesión</a></li>
+
     </ul>
 
 </div>
 
+<!-- ===== CONTENIDO ===== -->
+
 <div class="main">
 
+    <!-- NAVBAR -->
+
     <div class="navbar">
-        <h1 style="font-size:20px;color:rgb(255, 234, 0);">
-Sistema Yonny
-</h1>
+
+        <div>
+
+            <h1>YonnySoft ERP</h1>
+
+            <p class="subtitulo">
+                Sistema Profesional de Gestión Comercial
+            </p>
+
+        </div>
 
         <button class="dark-btn" onclick="modoOscuro()">
             🌙
         </button>
+
     </div>
 
-    <div class="formulario">
+    <!-- TARJETAS -->
 
-        <input type="text" id="nombre" placeholder="Nombre Producto">
+    <div class="cards">
 
-        <input type="number" id="precio" placeholder="Precio">
+        <div class="card">
 
-        <input type="number" id="cantidad" placeholder="Cantidad">
+            <h3>📦 Productos</h3>
 
-        <input type="text" id="categoria" placeholder="Categoría">
+            <h2 id="totalProductos">0</h2>
 
-        <button onclick="guardarProducto()">
-            Guardar Producto
+        </div>
+
+        <div class="card">
+
+            <h3>💰 Inventario</h3>
+
+            <h2 id="valorInventario">$0</h2>
+
+        </div>
+
+        <div class="card">
+
+            <h3>⚠ Stock Bajo</h3>
+
+            <h2 id="stockBajo">0</h2>
+
+        </div>
+
+        <div class="card">
+
+            <h3>👤 Usuarios</h3>
+
+            <h2>1</h2>
+
+        </div>
+
+    </div>
+
+    <!-- BUSCADOR -->
+
+    <div class="acciones">
+
+        <input
+            type="text"
+            id="buscar"
+            placeholder="🔍 Buscar producto..."
+        >
+
+        <button class="nuevo-btn">
+
+            ➕ Nuevo Producto
+
         </button>
 
     </div>
+
+    <!-- FORMULARIO -->
+
+    <div class="formulario">
+
+        <h2>Registrar Producto</h2>
+
+        <input
+            type="text"
+            id="nombre"
+            placeholder="Nombre del producto">
+
+        <input
+            type="number"
+            id="precio"
+            placeholder="Precio">
+
+        <input
+            type="number"
+            id="cantidad"
+            placeholder="Cantidad">
+
+        <input
+            type="text"
+            id="categoria"
+            placeholder="Categoría">
+
+        <button onclick="guardarProducto()">
+
+            💾 Guardar Producto
+
+        </button>
+
+    </div>
+
+    <!-- TABLA -->
 
     <table>
 
         <thead>
 
             <tr>
+
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Precio</th>
                 <th>Cantidad</th>
                 <th>Categoría</th>
                 <th>Acciones</th>
+
             </tr>
 
         </thead>
 
-        <tbody id="tablaProductos"></tbody>
+        <tbody id="tablaProductos">
+
+        </tbody>
 
     </table>
 
-</div>
+        </div>
 
 <script>
 
@@ -82,25 +196,34 @@ let editandoId = null;
 async function cargarProductos(){
 
     const respuesta = await fetch("/productos");
-
     const productos = await respuesta.json();
 
-    const tabla =
-    document.getElementById("tablaProductos");
+    const tabla = document.getElementById("tablaProductos");
 
     tabla.innerHTML = "";
 
-    productos.forEach(producto=>{
+    let total = 0;
+    let valorInventario = 0;
+    let stockBajo = 0;
+
+    productos.forEach(producto => {
+
+        total++;
+
+        valorInventario += Number(producto.precio) * Number(producto.cantidad);
+
+        if(Number(producto.cantidad) <= 5){
+            stockBajo++;
+        }
 
         tabla.innerHTML += `
-
         <tr>
 
             <td>${producto.id}</td>
 
             <td>${producto.nombre}</td>
 
-            <td>${producto.precio}</td>
+            <td>$${Number(producto.precio).toLocaleString()}</td>
 
             <td>${producto.cantidad}</td>
 
@@ -109,48 +232,42 @@ async function cargarProductos(){
             <td>
 
                 <button onclick="editarProducto(
-                ${producto.id},
-                '${producto.nombre}',
-                '${producto.precio}',
-                '${producto.cantidad}',
-                '${producto.categoria}'
+                    ${producto.id},
+                    '${producto.nombre}',
+                    '${producto.precio}',
+                    '${producto.cantidad}',
+                    '${producto.categoria}'
                 )">
-
-                ✏️ Editar
-
+                    ✏️ Editar
                 </button>
 
                 <button onclick="eliminarProducto(${producto.id})">
-
-                🗑 Eliminar
-
+                    🗑️ Eliminar
                 </button>
 
             </td>
 
         </tr>
-
         `;
 
     });
+
+    document.getElementById("totalProductos").textContent = total;
+    document.getElementById("valorInventario").textContent =
+        "$" + valorInventario.toLocaleString();
+
+    document.getElementById("stockBajo").textContent = stockBajo;
 
 }
 
 async function guardarProducto(){
 
-    const nombre =
-    document.getElementById("nombre").value;
+    const nombre = document.getElementById("nombre").value;
+    const precio = document.getElementById("precio").value;
+    const cantidad = document.getElementById("cantidad").value;
+    const categoria = document.getElementById("categoria").value;
 
-    const precio =
-    document.getElementById("precio").value;
-
-    const cantidad =
-    document.getElementById("cantidad").value;
-
-    const categoria =
-    document.getElementById("categoria").value;
-
-    if(editandoId === null){
+    if(editandoId == null){
 
         await fetch("/productos",{
 
@@ -198,13 +315,7 @@ async function guardarProducto(){
 
 }
 
-function editarProducto(
-id,
-nombre,
-precio,
-cantidad,
-categoria
-){
+function editarProducto(id,nombre,precio,cantidad,categoria){
 
     editandoId = id;
 
@@ -217,10 +328,12 @@ categoria
 
 async function eliminarProducto(id){
 
-    if(confirm("¿Eliminar producto?")){
+    if(confirm("¿Desea eliminar este producto?")){
 
         await fetch(`/productos/${id}`,{
+
             method:"DELETE"
+
         });
 
         cargarProductos();
@@ -231,10 +344,10 @@ async function eliminarProducto(id){
 
 function limpiarFormulario(){
 
-    document.getElementById("nombre").value="";
-    document.getElementById("precio").value="";
-    document.getElementById("cantidad").value="";
-    document.getElementById("categoria").value="";
+    document.getElementById("nombre").value = "";
+    document.getElementById("precio").value = "";
+    document.getElementById("cantidad").value = "";
+    document.getElementById("categoria").value = "";
 
 }
 
@@ -244,9 +357,28 @@ function modoOscuro(){
 
 }
 
+document.getElementById("buscar").addEventListener("keyup",function(){
+
+    let texto = this.value.toLowerCase();
+
+    let filas = document.querySelectorAll("#tablaProductos tr");
+
+    filas.forEach(fila=>{
+
+        if(fila.innerText.toLowerCase().includes(texto)){
+            fila.style.display="";
+        }else{
+            fila.style.display="none";
+        }
+
+    });
+
+});
+
 window.onload = cargarProductos;
 
 </script>
 
 </body>
+
 </html>

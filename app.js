@@ -5,7 +5,7 @@ async function guardar() {
     const cantidad = document.getElementById("cantidad").value;
     const categoria = document.getElementById("categoria").value;
 
-    await fetch("http://localhost:3000/guardar", {
+    await fetch("/productos", {
 
         method: "POST",
 
@@ -28,7 +28,7 @@ async function guardar() {
 
 async function cargarProductos() {
 
-    const respuesta = await fetch("http://localhost:3000/productos");
+    const respuesta = await fetch("/productos");
 
     const productos = await respuesta.json();
 
@@ -94,7 +94,7 @@ async function cargarProductos() {
 
 async function eliminarProducto(id) {
 
-    await fetch(`http://localhost:3000/eliminar/${id}`, {
+    await fetch(`/productos/${id}`, {
         method: "DELETE"
     });
 
@@ -112,7 +112,7 @@ async function editarProducto(id, nombre, precio, cantidad, categoria) {
 
     const nuevaCategoria = prompt("Editar categoría:", categoria);
 
-    await fetch(`http://localhost:3000/editar/${id}`, {
+    await fetch(`/productos/${id}`, {
 
         method: "PUT",
 

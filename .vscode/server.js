@@ -88,21 +88,26 @@ app.post("/registro", async (req, res) => {
     `;
 
     conexion.query(
-        sql,
-        [nombre, correo, passwordHash],
-        (error) => {
-                if (error) {
-    console.log("ERROR REGISTRO:", error);
+    sql,
+    [nombre, correo, passwordHash],
+    (error) => {
 
-    if (error.code === "ER_DUP_ENTRY") {
-        return res.send("Ese correo ya está registrado");
-    }
+        if (error) {
 
-    return res.send("Error al registrar");
-}
+            console.log(error);
+
+            if (error.code === "ER_DUP_ENTRY") {
+                return res.send("Ese correo ya está registrado");
+            }
+
+            return res.send("Error al registrar");
 
         }
-    );
+
+        res.send("Usuario registrado");
+
+    }
+);
 
 });
 
