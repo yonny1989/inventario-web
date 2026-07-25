@@ -16,20 +16,14 @@ app.use(express.static("./"));
 
 /* CONEXION MYSQL RAILWAY */
 
-console.log("MYSQL_URL =", process.env.MYSQL_URL);
-
-console.log("HOST:", process.env.MYSQLHOST);
-console.log("USER:", process.env.MYSQLUSER);
-console.log("DB:", process.env.MYSQLDATABASE);
-console.log("PORT:", process.env.MYSQLPORT);
-
 const conexion = mysql.createConnection({
-   host: process.env.MYSQLHOST || process.env.MYSQL_HOST,
-user: process.env.MYSQLUSER || process.env.MYSQL_USER,
-password: process.env.MYSQLPASSWORD || process.env.MYSQL_PASSWORD,
-database: process.env.MYSQLDATABASE || process.env.MYSQL_DATABASE,
-port: process.env.MYSQLPORT || process.env.MYSQL_PORT
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT
 });
+
 /* CONECTAR MYSQL */
 
 conexion.connect((error) => {
@@ -41,26 +35,6 @@ conexion.connect((error) => {
     } else {
 
         console.log("MYSQL CONECTADO");
-
-        conexion.query(`
-        CREATE TABLE IF NOT EXISTS usuarios (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            nombre VARCHAR(100),
-            correo VARCHAR(100) UNIQUE,
-            password VARCHAR(255),
-            rol VARCHAR(20)
-        )
-        `);
-
-        conexion.query(`
-        CREATE TABLE IF NOT EXISTS productos (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            nombre VARCHAR(100),
-            precio DECIMAL(10,2),
-            cantidad INT,
-            categoria VARCHAR(100)
-        )
-        `);
 
     }
 
@@ -88,26 +62,23 @@ app.post("/registro", async (req, res) => {
     `;
 
     conexion.query(
-    sql,
-    [nombre, correo, passwordHash],
-    (error) => {
+        sql,
+        [nombre, correo, passwordHash],
+        (error) => {
 
-        if (error) {
+            if (error) {
 
-            console.log(error);
+                console.log(error);
+                res.send("Error al registrar");
 
-            if (error.code === "ER_DUP_ENTRY") {
-                return res.send("Ese correo ya está registrado");
+            } else {
+
+                res.send("Usuario registrado");
+
             }
 
-            return res.send("Error al registrar");
-
         }
-
-        res.send("Usuario registrado");
-
-    }
-);
+    );
 
 });
 
