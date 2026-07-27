@@ -16,6 +16,11 @@ app.use(express.static("./"));
 
 /* CONEXION MYSQL RAILWAY */
 
+console.log("HOST:", process.env.DB_HOST);
+console.log("USER:", process.env.DB_USER);
+console.log("DB:", process.env.DB_NAME);
+console.log("PORT:", process.env.DB_PORT);
+
 const conexion = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
